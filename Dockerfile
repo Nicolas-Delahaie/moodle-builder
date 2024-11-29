@@ -23,3 +23,7 @@ RUN apt-get update && apt-get install -y \
     bcmath \
     && docker-php-ext-enable \
     opcache
+
+RUN echo "max_input_vars = 5000" >> /usr/local/etc/php/php.ini
+
+USER www-data
