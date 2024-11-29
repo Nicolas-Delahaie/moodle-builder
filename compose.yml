@@ -1,0 +1,43 @@
+services:
+    apache:
+        build:
+            context: .
+        ports:
+            - 80:80
+        volumes:
+            - ./moodle:/var/www/html
+            - ./moodledata:/var/www/moodledata
+        environment:
+            - MOODLE_DATABASE_HOST=mysql
+            - MOODLE_DATABASE_USER=moodle
+            - MOODLE_DATABASE_PASSWORD=moodle_password
+            - MOODLE_DATABASE_NAME=moodle
+        depends_on:
+            - mysql
+        restart: always
+
+    mysql:
+        image: mysql:latest
+        environment:
+            MYSQL_DATABASE: moodle
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_USER: moodle
+            MYSQL_PASSWORD: moodle_password
+        volumes:
+            - db-data:/var/lib/mysql
+        ports:
+            - 3306:3306
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:latest
+        environment:
+            PMA_HOST: mysql
+            PMA_USER: root
+            PMA_PASSWORD: root
+        ports:
+            - 8080:80
+        depends_on:
+            - mysql
+
+volumes:
+    db-data:
