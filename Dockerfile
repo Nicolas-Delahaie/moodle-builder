@@ -26,4 +26,14 @@ RUN apt-get update && apt-get install -y \
 
 RUN echo "max_input_vars = 5000" >> /usr/local/etc/php/php.ini
 
-USER www-data
+WORKDIR /var/www/
+
+# Copy moodle project
+COPY --chown=www-data:www-data ./moodle html
+
+# Give permissions to moodledata/, before persisting
+RUN mkdir moodledata
+RUN chown -R www-data:www-data moodledata
+
+# Copy DB configuration
+COPY --chown=www-data ./config.php /var/www/

@@ -4,25 +4,24 @@ services:
             context: .
         ports:
             - 80:80
-        volumes:
-            - ./moodle:/var/www/html
-            - ./moodledata:/var/www/moodledata
         environment:
-            - MOODLE_DATABASE_HOST=mysql
-            - MOODLE_DATABASE_USER=moodle
-            - MOODLE_DATABASE_PASSWORD=moodle_password
-            - MOODLE_DATABASE_NAME=moodle
+            - MOODLE_DATABASE_HOST=${DB_HOST}
+            - MOODLE_DATABASE_USER=${DB_USER}
+            - MOODLE_DATABASE_PASSWORD=${DB_PASSWORD}
+            - MOODLE_DATABASE_NAME=${DB_NAME}
         depends_on:
             - mysql
+        volumes:
+            - moodle-data:/var/www/moodledata
         restart: always
 
     mysql:
         image: mysql:latest
         environment:
-            MYSQL_DATABASE: moodle
-            MYSQL_ROOT_PASSWORD: root
-            MYSQL_USER: moodle
-            MYSQL_PASSWORD: moodle_password
+            MYSQL_DATABASE: ${DB_NAME}
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_USER: ${DB_USER}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
         volumes:
             - db-data:/var/lib/mysql
         ports:
@@ -31,13 +30,13 @@ services:
     phpmyadmin:
         image: phpmyadmin/phpmyadmin:latest
         environment:
-            PMA_HOST: mysql
+            PMA_HOST: ${DB_HOST}
             PMA_USER: root
-            PMA_PASSWORD: root
+            PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
         ports:
             - 8080:80
         depends_on:
             - mysql
-
 volumes:
     db-data:
+    moodle-data:
