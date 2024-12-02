@@ -5,10 +5,11 @@ services:
         ports:
             - 80:80
         environment:
-            - MOODLE_DATABASE_HOST=${DB_HOST}
-            - MOODLE_DATABASE_USER=${DB_USER}
-            - MOODLE_DATABASE_PASSWORD=${DB_PASSWORD}
-            - MOODLE_DATABASE_NAME=${DB_NAME}
+            - DB_HOST=${DB_HOST}
+            - DB_NAME=${DB_NAME}
+            - DB_USER=${DB_USER}
+            - DB_ADMIN_USER=${DB_ADMIN_USER}
+            - DB_ADMIN_PASSWORD=${DB_ADMIN_PASSWORD}
         depends_on:
             - mysql
         volumes:
@@ -16,12 +17,13 @@ services:
         restart: always
 
     mysql:
+        container_name: ${DB_HOST}
         image: mysql:latest
         environment:
             MYSQL_DATABASE: ${DB_NAME}
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-            MYSQL_USER: ${DB_USER}
-            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_USER: ${DB_ADMIN_USER}
+            MYSQL_PASSWORD: ${DB_ADMIN_PASSWORD}
         volumes:
             - db-data:/var/lib/mysql
         ports:

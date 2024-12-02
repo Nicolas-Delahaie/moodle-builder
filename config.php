@@ -1,26 +1,26 @@
-<?php  // Moodle configuration file
+<?php
+// Moodle configuration file (check out every configs into config-dist.php file)
 
 unset($CFG);
 global $CFG;
 $CFG = new stdClass();
 
-$CFG->dbtype    = 'mysqli';
+$CFG->dbtype = 'mysqli';
 $CFG->dblibrary = 'native';
-$CFG->dbhost    = 'mysql';
-$CFG->dbname    = 'moodle';
-$CFG->dbuser    = 'moodle';
-$CFG->dbpass    = 'moodle_password';
-$CFG->prefix    = 'mdl_';
-$CFG->dboptions = array (
+$CFG->dbhost = getenv('DB_HOST');
+$CFG->dbname = getenv('DB_NAME');
+$CFG->dbuser = getenv('DB_ADMIN_USER');
+$CFG->dbpass = getenv('DB_ADMIN_PASSWORD');
+$CFG->prefix = 'mdl_';
+$CFG->dboptions = array(
   'dbpersist' => 0,
   'dbport' => 3306,
   'dbsocket' => '',
   'dbcollation' => 'utf8mb4_0900_ai_ci',
 );
 
-$CFG->wwwroot   = 'http://localhost';
-$CFG->dataroot  = '/var/www/moodledata';
-$CFG->admin     = 'admin';
+$CFG->wwwroot = 'http://localhost';
+$CFG->dataroot = '/var/www/moodledata';
 
 $CFG->directorypermissions = 0777;
 
