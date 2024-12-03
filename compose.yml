@@ -7,7 +7,6 @@ services:
         environment:
             - DB_HOST=${DB_HOST}
             - DB_NAME=${DB_NAME}
-            - DB_USER=${DB_USER}
             - DB_ADMIN_USER=${DB_ADMIN_USER}
             - DB_ADMIN_PASSWORD=${DB_ADMIN_PASSWORD}
         depends_on:

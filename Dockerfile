@@ -35,6 +35,15 @@ WORKDIR /var/www/
 COPY --chown=www-data:www-data ./moodle html
 COPY --chown=www-data ./config.php html
 
-# Give permissions to moodledata/, before persisting
-RUN mkdir moodledata
-RUN chown -R www-data:www-data moodledata
+RUN chown www-data:www-data .
+
+USER www-data
+
+# from https://download.moodle.org/download.php/langpack/4.5/fr.zip
+COPY ./fr.zip /tmp/fr.zip
+
+# Creates moodledata/ and adds french language pack
+RUN unzip -o /tmp/fr.zip -d /tmp/fr && \
+    mkdir -p moodledata/lang/fr &&\
+    cp -R /tmp/fr/* moodledata/lang &&\
+    chmod -R 0777 moodledata/lang/fr

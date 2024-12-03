@@ -21,7 +21,7 @@ $CFG->dboptions = array(
 
 $CFG->wwwroot = 'http://localhost';
 $CFG->dataroot = '/var/www/moodledata';
-
+$CFG->lang = 'fr';
 $CFG->directorypermissions = 0777;
 
 require_once(__DIR__ . '/lib/setup.php');
