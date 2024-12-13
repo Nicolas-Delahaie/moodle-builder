@@ -3,6 +3,7 @@
 Cette installation permet de mettre en place un projet Moodle local en place. Celui-ci doit être déployé et exposé pour que les collaborateurs puissent le personnaliser via l'interface graphique.
 
 -   `git clone -b MOODLE_403_STABLE git://git.moodle.org/moodle.git`
+-   Fabriquer les mot de passes DB_ADMIN_PASSWORD et MYSQL_ROOT_PASSWORD (dans le .env)
 -   `docker compose up -d --build`
 -   Ouvrir http://localhost
 -   Suivre les étapes d'initialisation supplémentaires
