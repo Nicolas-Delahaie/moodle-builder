@@ -32,8 +32,6 @@ services:
         image: phpmyadmin/phpmyadmin:latest
         environment:
             PMA_HOST: ${DB_HOST}
-            PMA_USER: root
-            PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
         ports:
             - 8080:80
         depends_on:
