@@ -27,7 +27,9 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN echo "max_input_vars = 5000" >> /usr/local/etc/php/php.ini
+RUN echo "max_input_vars = 5000" >> /usr/local/etc/php/php.ini &&\
+    echo "upload_max_filesize = 128M" >> /usr/local/etc/php/php.ini &&\
+    echo "post_max_size = 128M" >> /usr/local/etc/php/php.ini
 
 WORKDIR /var/www/
 
@@ -39,10 +41,9 @@ RUN chown www-data:www-data .
 
 USER www-data
 
+# Adds french language pack into moodledata (created)
 # from https://download.moodle.org/download.php/langpack/4.5/fr.zip
 COPY ./fr.zip /tmp/fr.zip
-
-# Creates moodledata/ and adds french language pack
 RUN unzip -o /tmp/fr.zip -d /tmp/fr && \
     mkdir -p moodledata/lang/fr &&\
     cp -R /tmp/fr/* moodledata/lang &&\

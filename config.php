@@ -19,7 +19,7 @@ $CFG->dboptions = array(
   'dbcollation' => 'utf8mb4_0900_ai_ci',
 );
 
-$CFG->wwwroot = getenv('MOODLE_HOST');
+$CFG->wwwroot = "http://" . getenv('MOODLE_HOST');
 $CFG->dataroot = '/var/www/moodledata';
 $CFG->lang = 'fr';
 $CFG->directorypermissions = 0777;
