@@ -26,7 +26,7 @@ Durant le fonctionnement de notre moodle, il a subit des création de cours, ajo
 
 Saisir dans le .env :
 
-- MOODLE_SOURCE : type d'installation souhaité ("cloned-moodle" ou "restored-version")
+- MOODLE_SOURCE : type d'installation souhaité ("cloned-moodle" ou "restored-moodle")
 - DB_ADMIN_PASSWORD : Mot de passe pour admin (Moodle)
 - DB_ROOT_PASSWORD : Mot de passe pour root (PhpMyAdmin)
 - MOODLE_HOST : Adresse publique / nom de domaine
