@@ -1,50 +1,46 @@
 services:
-    apache:
-        build:
-            context: .
-        ports:
-            - 80:80
-        environment:
-            - DB_HOST=${DB_HOST}
-            - DB_NAME=${DB_NAME}
-            - DB_ADMIN_USER=${DB_ADMIN_USER}
-            - DB_ADMIN_PASSWORD=${DB_ADMIN_PASSWORD}
-            - MOODLE_HOST=${MOODLE_HOST}
-        depends_on:
-            - mysql
-        volumes:
-            - moodle-data:/var/www/moodledata
-        restart: always
+  apache:
+    build:
+      context: ./apache
+    ports:
+      - 80:80
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_ADMIN_USER=${DB_ADMIN_USER}
+      - DB_ADMIN_PASSWORD=${DB_ADMIN_PASSWORD}
+      - MOODLE_HOST=${MOODLE_HOST}
+    depends_on:
+      - mysql
+    volumes:
+      - moodle-data:/var/www/moodledata
+    restart: always
 
-    mysql:
-        container_name: ${DB_HOST}
-        image: mysql:latest
-        environment:
-            MYSQL_DATABASE: ${DB_NAME}
-            MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-            MYSQL_USER: ${DB_ADMIN_USER}
-            MYSQL_PASSWORD: ${DB_ADMIN_PASSWORD}
-        volumes:
-            - db-data:/var/lib/mysql
-        ports:
-            - 3306:3306
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_USER: ${DB_ADMIN_USER}
+      MYSQL_PASSWORD: ${DB_ADMIN_PASSWORD}
+    volumes:
+      - db-data:/var/lib/mysql
 
-    phpmyadmin:
-        image: phpmyadmin/phpmyadmin:latest
-        environment:
-            PMA_HOST: ${DB_HOST}
-        ports:
-            - 8080:80
-        depends_on:
-            - mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      PMA_HOST: mysql
+    ports:
+      - 8080:80
+    depends_on:
+      - mysql
 
-    smtp:
-        image: namshi/smtp
-        # environment:
-        #     MAILNAME: nicolas.delahaie@ynov.com
-        ports:
-            - 25:25
-        restart: always
+  # smtp:
+  #   image: namshi/smtp
+  #   # environment:
+  #   #     MAILNAME: nicolas.delahaie@ynov.com
+  #   ports:
+  #     - 25:25
+  #   restart: always
 volumes:
-    db-data:
-    moodle-data:
+  db-data:
+  moodle-data:

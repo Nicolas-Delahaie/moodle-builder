@@ -7,7 +7,7 @@ $CFG = new stdClass();
 
 $CFG->dbtype = 'mysqli';
 $CFG->dblibrary = 'native';
-$CFG->dbhost = getenv('DB_HOST');
+$CFG->dbhost = 'mysql';
 $CFG->dbname = getenv('DB_NAME');
 $CFG->dbuser = getenv('DB_ADMIN_USER');
 $CFG->dbpass = getenv('DB_ADMIN_PASSWORD');
@@ -17,6 +17,7 @@ $CFG->dboptions = array(
   'dbport' => 3306,
   'dbsocket' => '',
   'dbcollation' => 'utf8mb4_0900_ai_ci',
+  'debug' => true,
 );
 
 $CFG->wwwroot = "http://" . getenv('MOODLE_HOST');
