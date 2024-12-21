@@ -31,12 +31,29 @@ RUN docker-php-ext-enable \
 
 RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
+ 
 RUN echo "max_input_vars = 5000" >> /usr/local/etc/php/php.ini &&\
     echo "upload_max_filesize = 128M" >> /usr/local/etc/php/php.ini &&\
     echo "post_max_size = 128M" >> /usr/local/etc/php/php.ini
 
 WORKDIR /var/www/
+
+
+FROM base AS restored-moodle
+COPY --chown=www-data:www-data ./moodle.zip /tmp/moodle.zip
+COPY --chown=www-data:www-data ./moodledata.zip /tmp/moodledata.zip
+
+RUN chown www-data:www-data .
+
+USER www-data
+
+RUN unzip -q -o /tmp/moodle.zip -d /var/www/html &&\
+    unzip -q -o /tmp/moodledata.zip -d /var/www/moodledata &&\
+    rm /tmp/moodle.zip /tmp/moodledata.zip
+
+USER root
+COPY --chown=www-data ./config.php html
+USER www-data
 
 FROM base AS cloned-moodle
 

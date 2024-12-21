@@ -19,7 +19,9 @@ services:
     restart: always
 
   mysql:
-    image: mysql:latest
+    build:
+      context: ./mysql
+      target: ${MOODLE_SOURCE}
     environment:
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}

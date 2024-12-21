@@ -8,17 +8,19 @@ Pour la mise en place du projet, il faut choisir un type d'installation, il peut
 
 ### Moodle vierge
 
-C'est une simple copie de projet moodle vierge, utilisant la version souhaitée.
+C'est une simple copie de projet moodle vierge, utilisant la version souhaitée (MOODLE_VERSION).
 
 ### Restauration
 
-On peut également restaurer le projet qui a été développé en cours. Celui ci a subit des création de cours, ajout de packs de textures, changements d'interface, modification des plugins...
+On peut également restaurer un projet existant. Pour ce faire, nous avons besoins d'ajouter des données du projet. Il faut les récupérer une à une sous forme de zip.
 
-Puisque notre VPS n'est pas à durée illimité, les données ont été extraites pour pouvoir restaurer le projet à l'identique. Les données incluent :
+Ensuite, il faut les copier jusqu'aux dossiers suivants :
 
-- `moodle/` : contient les fichiers sources, et notament le plugins et textures packs.
-- `moodle_dump.sql` : contient un dump de la base de données
-- `moodledata/`
+- `apache/moodle.zip` : Fichiers sources du serveur existant, présents dans le container apache dans `/var/www/html`.
+- `apache/moodledata.zip` : Fichiers utilisateurs, présents dans le container apache dans `/var/www/moodledata`.
+- `mysql/moodle_dump.sql` : Dump de la base de données, récupérable dans le container mysql via `mysqldump -u root -p moodle > /moodle_dump.sql`
+
+Durant le fonctionnement de notre moodle, il a subit des création de cours, ajout de packs de textures, changements d'interface, modification des plugins... Les données ont donc été sauvegardées pour ne pas les perdre lorsque le VPS arrivera à son terme.
 
 ## Execution
 
@@ -97,3 +99,17 @@ Les administrateurs se conenctent à Moodle via les utilisateurs créés sur Moo
     - Configuration des variables
     - Autoenregistrement ne génère plus d'erreur MAIS pas de mail reççu => SMTP ne fonctionen pas
     - tests du service SMTP sans moodle avec swaks dans le container => Erreur "IO::Socket::INET6: sock_info: Bad protocol 'tcp'"
+- Sauvegarde du travail effectué
+  - Dump de la db
+    - Dans hote > VM > mysql : `mysqldump -u root -p moodle > /moodle_dump.sql`
+    - Dans hote > VM : `docker cp moodle-mysql:/moodle_dump.sql /root/moodle`
+    - Dans hote : `scp root@212.83.155.143:/root/moodle/moodle_dump.sql ./mysql`
+  - Sauvegarde du `moodledata/`
+    - Dans hote > VM > apache : `cd /var/www/moodledata && zip -r /tmp/moodledata.zip .`
+    - Dans hote > VM : `docker cp moodle-apache-1:/tmp/moodledata.zip /tmp/moodledata.zip`
+    - Dans hote : `scp -r root@212.83.155.143:/tmp/moodledata.zip ./apache`
+  - Sauvegarde du `moodle/`
+    - Suppression cache dans Administration du site > Développement > Purger toutes les caches
+    - Dans hote > VM > apache : `cd /var/www/html && zip -r /tmp/moodle.zip .`
+    - Dans hote > VM : `docker cp moodle-apache-1:/tmp/moodle.zip /tmp/moodle.zip`
+    - Dans hote : `scp -r root@212.83.155.143:/tmp/moodle.zip ./apache`
