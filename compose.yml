@@ -2,6 +2,9 @@ services:
   apache:
     build:
       context: ./apache
+      target: ${MOODLE_SOURCE}
+      args:
+        MOODLE_VERSION: ${MOODLE_VERSION}
     ports:
       - 80:80
     environment:

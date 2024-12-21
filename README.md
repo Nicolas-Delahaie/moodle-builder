@@ -2,14 +2,34 @@
 
 # Déploiement
 
-- `git clone -b MOODLE_403_STABLE git://git.moodle.org/moodle.git apache/moodle appache/moodle`
-- Saisir dans le .env :
-  - DB_ADMIN_PASSWORD : Mot de passe pour admin (Moodle)
-  - DB_ROOT_PASSWORD : Mot de passe pour root (PhpMyAdmin)
-  - MOODLE_HOST : Adresse publique / nom de domaine
+## Type d'installation
+
+Pour la mise en place du projet, il faut choisir un type d'installation, il peut être cloné ou restauré.
+
+### Moodle vierge
+
+C'est une simple copie de projet moodle vierge, utilisant la version souhaitée.
+
+### Restauration
+
+On peut également restaurer le projet qui a été développé en cours. Celui ci a subit des création de cours, ajout de packs de textures, changements d'interface, modification des plugins...
+
+Puisque notre VPS n'est pas à durée illimité, les données ont été extraites pour pouvoir restaurer le projet à l'identique. Les données incluent :
+
+- `moodle/` : contient les fichiers sources, et notament le plugins et textures packs.
+- `moodle_dump.sql` : contient un dump de la base de données
+- `moodledata/`
+
+## Execution
+
+Saisir dans le .env :
+
+- MOODLE_SOURCE : type d'installation souhaité ("cloned-moodle" ou "restored-version")
+- DB_ADMIN_PASSWORD : Mot de passe pour admin (Moodle)
+- DB_ROOT_PASSWORD : Mot de passe pour root (PhpMyAdmin)
+- MOODLE_HOST : Adresse publique / nom de domaine
 - `docker compose up -d --build`
 - Ouvrir MOODLE_HOST dans le navigateur
-- Suivre les étapes d'initialisation supplémentaires de Moodle
 
 # Architecture
 
@@ -23,7 +43,7 @@ Les administrateurs se conenctent à Moodle via les utilisateurs créés sur Moo
 
 # Déploiement sur la VM
 
-> Historique des commandes executées pour déployer le Moodle.
+> Historique des commandes executées pour déployer le Moodle sur la VM.
 
 - Installation de Git : `apt install git-all`
 - Installlation de Docker :

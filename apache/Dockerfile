@@ -1,4 +1,4 @@
-FROM php:8.1-apache
+FROM php:8.1-apache AS base
 
 RUN apt-get update && apt-get install -y \
     libpng-dev \
@@ -9,7 +9,10 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libldap2-dev \
     unzip \
-    && docker-php-ext-configure gd --with-jpeg \
+    git \
+    --no-install-recommends
+
+RUN docker-php-ext-configure gd --with-jpeg \
     && docker-php-ext-install \
     mysqli \
     pdo_mysql \
@@ -21,10 +24,12 @@ RUN apt-get update && apt-get install -y \
     opcache \
     xml \
     bcmath \
-    exif \
-    && docker-php-ext-enable \
-    opcache \
-    && apt-get clean \
+    exif
+
+RUN docker-php-ext-enable \
+    opcache 
+
+RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN echo "max_input_vars = 5000" >> /usr/local/etc/php/php.ini &&\
@@ -33,13 +38,18 @@ RUN echo "max_input_vars = 5000" >> /usr/local/etc/php/php.ini &&\
 
 WORKDIR /var/www/
 
-# Copy moodle project (including custom config)
-COPY --chown=www-data:www-data ./moodle html
-COPY --chown=www-data ./config.php html
+FROM base AS cloned-moodle
+
+ARG MOODLE_VERSION
 
 RUN chown www-data:www-data .
 
 USER www-data
+
+# Cloning moodle project
+RUN test -n "$MOODLE_VERSION" || (echo "Missing arg !" && exit 1) &&\
+    git clone --single-branch -b ${MOODLE_VERSION} git://git.moodle.org/moodle.git html
+COPY --chown=www-data ./config.php html
 
 # Adds french language pack into moodledata (created)
 # from https://download.moodle.org/download.php/langpack/4.5/fr.zip
