@@ -1,57 +1,42 @@
-# Installation
+> Cette installation permet de mettre en place un projet Moodle local en place. Celui-ci doit être déployé et exposé pour que les collaborateurs puissent le personnaliser via l'interface graphique.
 
-Cette installation permet de mettre en place un projet Moodle local en place. Celui-ci doit être déployé et exposé pour que les collaborateurs puissent le personnaliser via l'interface graphique.
+# Déploiement
 
-- `git clone -b MOODLE_403_STABLE git://git.moodle.org/moodle.git`
+- `git clone -b MOODLE_403_STABLE git://git.moodle.org/moodle.git apache/moodle appache/moodle`
 - Saisir dans le .env :
   - DB_ADMIN_PASSWORD : Mot de passe pour admin (Moodle)
   - DB_ROOT_PASSWORD : Mot de passe pour root (PhpMyAdmin)
   - MOODLE_HOST : Adresse publique / nom de domaine
 - `docker compose up -d --build`
-- Ouvrir http://localhost
-- Suivre les étapes d'initialisation supplémentaires
+- Ouvrir MOODLE_HOST dans le navigateur
+- Suivre les étapes d'initialisation supplémentaires de Moodle
 
 # Architecture
 
-Le dossier `moodle/` est copié dans l'image docker. S'il est modifié, il faudra re build le docker.
-
-Le dossier `moodledata/` est quant à lui persisté sur un volume pour le garder entre les executions. En effet, il a fallu éviter de le mapper à partir de l'hôte car la synchronisation entrainait une énorme latence.
+Le dossier `moodledata/` et les données de la base de données sont persistées sur un volume pour les garder entre les executions.
 
 Moodle se connecte à la BDD via l'utilisateur admin.
 
-Les administrateurs se connectent à la BDD en externe via PhpMyAdmin via l'utilisateur root.
+Les administrateurs se connectent à la BDD en externe par PhpMyAdmin via l'utilisateur root.
 
-Les administrateurs se conenctent à Moodle via les utilisateurs créés sur Moodle (prenoms de l'équipe).
+Les administrateurs se conenctent à Moodle via les utilisateurs créés sur Moodle en runtime.
 
 # Déploiement sur la VM
 
-## Installations
+> Historique des commandes executées pour déployer le Moodle.
 
-**Git :**
-
-dpkg -l | grep git : pas de git
-apt install git-all
-
-**Docker :**
-
-docker --version : non reconnu
-
-apt-get update  
-apt-get install ca-certificates curl  
-sudo install -m 0755 -d /etc/apt/keyrings  
-sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc  
-sudo chmod a+r /etc/apt/keyrings/docker.asc
-
-```shell
-echo \
- "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" \
- | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-```
-
-sudo apt-get update
-
-## Lancement
-
+- Installation de Git : `apt install git-all`
+- Installlation de Docker :
+  - `apt-get update`
+  - `apt-get install ca-certificates curl`
+  - `sudo install -m 0755 -d /etc/apt/keyrings`
+  - `sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc`
+  - `sudo chmod a+r /etc/apt/keyrings/docker.asc`
+  - ```shell
+    echo \
+     "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" \
+     | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    ```
 - `git clone -b MOODLE_403_STABLE git://git.moodle.org/moodle.git`
 - `dpkg -l | grep nginx : pas de nginx` et `dpkg -l | grep apache` : check qu'aucun serveur n'est installé
 - `docker compose up -d --build`
